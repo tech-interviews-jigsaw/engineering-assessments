@@ -34,8 +34,9 @@ def print_grouped_bys(cols, grouped_bys):
 
 
 def print_grouped_by(grouped):
+    selected_group = grouped[grouped.iloc[:, 0].values != None]
     plt.figure(figsize=(14, 2))
-    plt.scatter(grouped.iloc[:10, 0], grouped.iloc[:10, 1])
+    plt.scatter(selected_group.iloc[:10, 0], selected_group.iloc[:10, 1])
     plt.show()
 
 # def build_grouped_by(df, col):
@@ -46,6 +47,22 @@ def build_grouped_by(table_name, col, engine):
     query = f"""select {col}, sum(order_value) total_order_value from {table_name} group by {col} order by total_order_value desc"""
     grouped = pd.read_sql(query, engine)
     return grouped
+
+def build_grouped_by_count(table_name, col, engine):
+    query = f"""select {col}, count(*) total_order_value from {table_name} group by {col} order by total_order_value desc"""
+    grouped = pd.read_sql(query, engine)
+    return grouped
+
+def build_grouped_bys_count(table_name, cols, engine):
+    grouped_bys = []
+    for col in cols:
+        grouped = build_grouped_by_count(table_name, col, engine)
+        grouped_bys.append(grouped)
+    return grouped_bys
+
+def group_and_print_count(table_name, cols, engine):
+    grouped_bys = build_grouped_bys_count(table_name, cols, engine)
+    print_grouped_bys(cols, grouped_bys)
 
 def build_grouped_bys(table_name, cols, engine):
     grouped_bys = []
