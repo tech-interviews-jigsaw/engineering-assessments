@@ -22,7 +22,7 @@ def insert_data(df, engine):
 
 def load_data():
     engine = create_engine('postgresql://@localhost:5432/willy_wonka')
-    df = pd.read_sql('select * from raw_orders', engine)
+    df = pd.read_sql('select * from raw_lineitems', engine)
     return engine, df
 
 engine, df = load_data()
